@@ -1,0 +1,22 @@
+<div class="mainGameContainer" ng-controller="BoardCtrl as ctrl">
+   <div class="row text-center">
+      <div class="col-xs-4">
+         <label for="board_width">Enter Board Width: </label>
+         <input type="number" ng-model="board_width" />
+      </div>
+      <div class="col-xs-4">
+         <label for="board_height">Enter Board Height: </label>
+         <input type="number" ng-model="board_height" />
+      </div>
+      <div class="col-xs-4">
+         <label for="board_mines">Enter Board Mines: </label>
+         <input type="number" ng-model="board_mines" />
+      </div>
+      <div class="row">
+         <div class="col-xs-12">
+            <button ng-click="populateBoard()">Reset</button>
+         </div>
+      </div>
+   </div>
+   <span game-grid></span>
+</div>
