@@ -1,6 +1,6 @@
 <div ng-style="manipulated_dimensions" 
      ng-click="checkCell(row.id, col.id, col.cell_id)" 
      class="gameCell">
-   <p ng-show="col.showing">{{ col.touching_mines }}</p>
+   <p ng-show="col.showing">{{ col.touching_mines }}<span class="mine glyphicon glyphicon-certificate" ng-show="col.mined"></span></p>
    <p ng-show="!col.showing">&nbsp</p>
 </div>

@@ -92,8 +92,29 @@ body {
   display: inline-block;
 }
 
+.gameCell p {
+  font-size: 25px;
+  padding-top: 7px;
+}
+
 .gameRow {
   width: 100%;
+}
+
+.resetButtonContainer {
+  margin-top: 10px;
+}
+
+.resetButtonContainer button {
+  width: 174px;
+}
+
+input {
+  width: 200px;
+  margin: 10px;
+}
+label {
+  width: 150px;
 }
 
 /* Responsive: Portrait tablets and up */

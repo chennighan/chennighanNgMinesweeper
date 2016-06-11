@@ -53,8 +53,9 @@ angular.module('ngMinesweeperApp')
 
          if(currentCell.mined == false) {
             currentCell.showing = true;
-         } else if(currentCell.mined == true) {
-            alert('you lose, you hit a mine!');
+         } else {
+            currentCell.showing = true;
+            alert("you lose you hit a mine!");
          }
 
          checkNeighbors(x, y, cell);
@@ -129,7 +130,11 @@ angular.module('ngMinesweeperApp')
          }
 
          console.log('total mines touching: ' + $scope.touchingMines);
-         currentCell.touching_mines = $scope.touchingMines;
+         if(currentCell.mined == false) {
+            currentCell.touching_mines = $scope.touchingMines;
+         } else {
+            currentCell.touching_mines = '';
+         }
       }
 
       var checkNeighborForMines = function(neighbor) {
