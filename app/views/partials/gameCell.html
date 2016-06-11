@@ -1,4 +1,6 @@
-<div ng-style="manipulated_dimensions" class="gameCell">
-   <p ng-show="col.mined">true</p>
-   <p ng-show="!col.mined">&nbsp</p>
+<div ng-style="manipulated_dimensions" 
+     ng-click="checkCell(row.id, col.id, col.cell_id)" 
+     class="gameCell">
+   <p ng-show="col.showing">{{ col.touching_mines }}</p>
+   <p ng-show="!col.showing">&nbsp</p>
 </div>

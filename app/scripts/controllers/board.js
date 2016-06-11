@@ -9,52 +9,134 @@
  */
 angular.module('ngMinesweeperApp')
    .controller('BoardCtrl', ['$scope', function ($scope) {
-      $scope.board_width = 0;
-      $scope.board_height = 0;
-      $scope.board_mines = 0;
+      $scope.boardWidth = 0;
+      $scope.boardHeight = 0;
+      $scope.boardMines = 0;
+      $scope.touchingMines = 0;
+      $scope.board = {};
+      $scope.mineList = [];
 
-      $scope.populateBoard = function() {
+      $scope.populateBoard = function(width, height, mines) {
          // reset the board on population request
          $scope.board = {
-            "rows": { }
+            'rows': { }
          };
 
          var counter = 0;
 
-         for(var w = 0; w < this.board_width; w++) {
+         for(var w = 0; w < width; w++) {
             $scope.board.rows['row'+w] = {
-               "cols": { }
+               'id': w,
+               'cols': { }
             };          
-            for(var h = 0; h < this.board_height; h++) {
+            for(var h = 0; h < height; h++) {
                counter++;
               
-               $scope.board.rows['row'+w]['cols']['col'+h] = {
+               $scope.board.rows['row'+w].cols['col'+h] = {
                   'mined': false,
+                  'showing': false,
+                  'touching_mines': 0,
+                  'id': h,
+                  'cell_id': counter,
                   'x': w,
                   'y': h
-               }
+               };
             }
          }
          
-         var mines = generateMines(this.board_width, this.board_height, this.board_mines);
+         $scope.mineList = generateMines(width, height, mines);
+      };
+
+      $scope.checkCell = function(x, y, cell) {
+         console.log('x: ' + x + ', y: ' + y + ', cell: ' + cell);
+         var currentCell = $scope.board.rows['row'+x].cols['col'+y];
+
+         if(currentCell.mined == false) {
+            currentCell.showing = true;
+         } else if(currentCell.mined == true) {
+            alert('you lose, you hit a mine!');
+         }
+
+         checkNeighbors(x, y, cell);
       }
 
       var generateMines = function(width, height, mines) {
-         var mine_list = [];
+         var mineList = [];
 
          for(var i = 0; i < mines; i++) {
-            var temp_x = Math.floor(Math.random()*(width - 0))+0;
-            var temp_y = Math.floor(Math.random()*(height - 0))+0;
+            var tempX = Math.floor(Math.random()*(width - 0))+0;
+            var tempY = Math.floor(Math.random()*(height - 0))+0;
 
-            mine_list.push({
+            mineList.push({
                'mine_id': i,
-               'x': temp_x,
-               'y': temp_y
+               'x': tempX,
+               'y': tempY
             });
 
-            $scope.board.rows['row'+temp_x]['cols']['col'+temp_y]['mined'] = true;
+            $scope.board.rows['row'+tempX].cols['col'+tempY].mined = true;
          }
 
-         return mine_list;
+         return mineList;
+      };
+
+      var checkNeighbors = function(x, y, cell) {
+         var board = $scope.board;
+         var currentCell = $scope.board.rows['row'+x].cols['col'+y];
+
+         $scope.touchingMines = 0;
+         $scope.touchingMineList = [];
+         var tempNeighbor = '';
+
+         // Top Middle
+         if(x-1 > -1)  {
+            tempNeighbor = board.rows['row'+(x-1)].cols['col'+y];
+            checkNeighborForMines(tempNeighbor);
+         }
+         //  Bottom Middle
+         if(x+1 <= $scope.boardWidth-1) {
+            tempNeighbor = board.rows['row'+(x+1)].cols['col'+y];
+            checkNeighborForMines(tempNeighbor);
+         }
+         // Left Middle
+         if(y-1 > -1) {
+            tempNeighbor = board.rows['row'+x].cols['col'+(y-1)];
+            checkNeighborForMines(tempNeighbor);
+         }
+         // Right Middle
+         if(y+1 <= $scope.boardHeight-1) {
+            tempNeighbor = board.rows['row'+x].cols['col'+(y+1)];
+            checkNeighborForMines(tempNeighbor);
+         }
+         // Bottom Right
+         if(x+1 <= $scope.boardWidth-1 && y+1 <= $scope.boardHeight-1) {
+            tempNeighbor = board.rows['row'+(x+1)].cols['col'+(y+1)];
+            checkNeighborForMines(tempNeighbor);
+         }
+         // Bottom Middle
+         if(x-1 >-1 && y+1 <= $scope.boardHeight-1) {
+            tempNeighbor = board.rows['row'+(x-1)].cols['col'+(y+1)];
+            checkNeighborForMines(tempNeighbor);
+         }
+         // Top Left
+         if(x-1 > -1 && y-1 > -1) {
+            tempNeighbor = board.rows['row'+(x-1)].cols['col'+(y-1)];
+            checkNeighborForMines(tempNeighbor);
+         }
+         // Bottom Left
+         if(x+1 <= $scope.boardWidth-1 && y-1 > -1) {
+            tempNeighbor = board.rows['row'+(x+1)].cols['col'+(y-1)];
+            checkNeighborForMines(tempNeighbor);
+         }
+
+         console.log('total mines touching: ' + $scope.touchingMines);
+         currentCell.touching_mines = $scope.touchingMines;
+      }
+
+      var checkNeighborForMines = function(neighbor) {
+         if(neighbor.mined == true) {
+            $scope.touchingMines++;
+            $scope.touchingMineList.push(neighbor);
+            console.log('mine at location: ' + neighbor.x + ',' + neighbor.y);
+         }
       }
    }]);

@@ -17,7 +17,17 @@ describe('Controller: BoardCtrl', function () {
     });
   }));
 
-  it('should attach a list of awesomeThings to the scope', function () {
-    expect(BoardCtrl.awesomeThings.length).toBe(3);
+  // initially there should not be any mines
+  it('should have no items to start', function () {
+    expect(scope.boardMines).toBe(0);
+  });
+
+  it('populate board should add mines', function() {
+    scope.boardWidth = 9;
+    scope.boardHeight = 9;
+    scope.boardMines = 10;
+
+    scope.populateBoard();
+    expect(scope.board.rows.row1)
   });
 });
